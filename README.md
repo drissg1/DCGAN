@@ -9,6 +9,8 @@ The original tensorflow post trained on the MNIST dataset and was able to genera
 The end goal of this project was to be able to reproduce realistic looking celebrity images and run a poll with my instagram followers. They would vote to see whether the image displayed was of a real celebrity or fake one, a little human vs. discriminator head to head test.  Unfortunately, as you will see the images weren't exactly deceptive.  
 
 # Results
+I made a short video that shows the training proccess happening https://github.com/drissg1/DCGAN/blob/master/video/faces.m4v
+
 A few of the generated Images that I cherry picked for their somewhat realistic nature. As you can see they are from from perfect but for only 4 full epochs of training they at least somewhat reasonable features. Obviously symmetry seams to be of no concern for the generator, a common problem for GAN models. 
 <div class="row">
   <div class="column">
@@ -28,7 +30,9 @@ A few of the generated Images that I cherry picked for their somewhat realistic 
 	  title="Celeb3" width="400" height="400" />
   </div> 
 </div>
+
 ## Setup
+
 ### Kaggle Dataset and Google Drive API
 
 After some trial and error I was able to authenticate my kaggle token on colab and directly download the dataset onto the local storage provided to me by the wonderful people at Google.
