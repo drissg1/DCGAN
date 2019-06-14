@@ -15,21 +15,21 @@ A few of the generated Images that I cherry picked for their somewhat realistic 
 <div class="row">
   <div class="column">
     <img src="https://github.com/drissg1/DCGAN/blob/master/images/example1%20(11).png"
-	  title="Celeb1"  style="width:100%" />
+	  title="Celeb1"  width = "400" />
   </div>
   <div class="column">
     <img src="https://github.com/drissg1/DCGAN/blob/master/images/example1%20(12).png" alt="Celeb2"
-	  title="Celeb2"  style="width:100%" />  
+	  title="Celeb2"  width = "400" />  
   </div>
  </div>
  <div class="row">
   <div class="column">
     <img src="https://github.com/drissg1/DCGAN/blob/master/images/example1%20(14).png" alt="Celeb1"
-	  title="Celeb3"  style="width:100%" />
+	  title="Celeb3"  width = "400" />
   </div>
   <div class="column">
     <img src="https://github.com/drissg1/DCGAN/blob/master/images/example1%20(9).png" alt="Celeb1"
-	  title="Celeb3" style="width:100%" />
+	  title="Celeb3" width = "400" />
   </div> 
 </div>
 
