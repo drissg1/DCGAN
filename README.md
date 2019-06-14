@@ -1,18 +1,37 @@
 # Training A DCGAN using tensorflow 2.0
 
-This was a fun project to get some expereince with the new tensorflow 2.0 API.  I adapated the basic structure from tensorflows [DCGAN](https://www.tensorflow.org/beta/tutorials/generative/dcgan)
+This was a fun project to get some experience with the new tensorflow 2.0 API.  I adapted the basic structure from tensorflows [DCGAN](https://www.tensorflow.org/beta/tutorials/generative/dcgan)
 
 Since I do not have access to an NVIDIA gpu I decided to use Google Colab to run the jupyter notebook that was used in the training of this model.
 
 The original tensorflow post trained on the MNIST dataset and was able to generate realistic looking images after a few epochs. I decided to use the [CelebA Dataset](https://www.kaggle.com/jessicali9530/celeba-dataset) for training.
 
-The end goal of this project was to be able to reproduce realistic looking celebrity images and run a poll with my instagram followers. They would vote to see whether the image displayed was of a real celebrity or fake one, a little human vs. discriminator head to head test.  Unfortunately, as you will see the images weren't exactly decepitive.  
+The end goal of this project was to be able to reproduce realistic looking celebrity images and run a poll with my instagram followers. They would vote to see whether the image displayed was of a real celebrity or fake one, a little human vs. discriminator head to head test.  Unfortunately, as you will see the images weren't exactly deceptive.  
 
+# Results
+A few of the generated Images that I cherry picked for their somewhat realistic nature. As you can see they are from from perfect but for only 4 full epochs of training they at least somewhat reasonable features. Obviously symmetry seams to be of no concern for the generator, a common problem for GAN models. 
+<div class="row">
+  <div class="column">
+    <img src="https://github.com/drissg1/DCGAN/blob/master/images/example1%20(11).png"
+	  title="Celeb1" width="400" height="400" />
+  </div>
+  <div class="column">
+    <img src="https://github.com/drissg1/DCGAN/blob/master/images/example1%20(12).png" alt="Celeb2"
+	  title="Celeb2" width="400" height="400" />  
+  </div>
+  <div class="column">
+    <img src="https://github.com/drissg1/DCGAN/blob/master/images/example1%20(14).png" alt="Celeb1"
+	  title="Celeb3" width="400" height="400" />
+  </div>
+  <div class="column">
+    <img src="https://github.com/drissg1/DCGAN/blob/master/images/example1%20(9).png" alt="Celeb1"
+	  title="Celeb3" width="400" height="400" />
+  </div> 
+</div>
 ## Setup
-
 ### Kaggle Dataset and Google Drive API
 
-After some trial and error I was able to authenticate my kaggle token on colab and directly download the datset onto the local storage provided to me by the wonderful people at Google.
+After some trial and error I was able to authenticate my kaggle token on colab and directly download the dataset onto the local storage provided to me by the wonderful people at Google.
 
 ```Python
 #Upload kaggle authorization json file
@@ -68,7 +87,7 @@ def load_and_preprocess_image(path,x_crop=176,y_crop=176):
 ```
 
 ### Tensorflow Dataset
-Since there are over 200,000 images memory usage could be a problem so I utilized the tensoflow's datset library to preprocess and load the images into an interable. This object will only return a selection conisting of "BATCH_SIZE" images for training. Unfortunately this was one of the main isssues I encountered while training. It seems as though memory is leaking during training because after about 200 batches of size 64 I reach the memory constraints of Colab. I found a work around but I am not sure what is the cause of the issue.
+Since there are over 200,000 images memory usage could be a problem so I utilized the tensoflow's dataset library to preprocess and load the images into an iterable. This object will only return a selection consisting of "BATCH_SIZE" images for training. Unfortunately this was one of the main issues I encountered while training. It seems as though memory is leaking during training because after about 200 batches of size 64 I reach the memory constraints of Colab. I found a work around but I am not sure what is the cause of the issue.
 
 ```Python
 #Create the df dataset for training
@@ -88,9 +107,9 @@ train_dataset = image_ds.batch(BATCH_SIZE)
 train_dataset = train_dataset.prefetch(buffer_size = tf.data.experimental.AUTOTUNE)
 ```
 ## Generator and Discriminator
-Next thing was to create the models for the Generator and the Discriminator. The Generator will receieve an tensor of shape (100,) and output an image of (176,176,3).
+Next thing was to create the models for the Generator and the Discriminator. The Generator will receive a tensor of shape (100,) and output an image of (176,176,3).
 
-The Discrimantor will receive an image of (176,176,3) and output the probability it associates with that image being either real or fake.
+The Discriminator will receive an image of (176,176,3) and output the probability it associates with that image being either real or fake.
 
 ```Python
 
@@ -175,7 +194,7 @@ def make_discriminator_model():
 ### Losses and Optimizers
 Next thing that was needed was to create the loss functions for the generator and the discriminator. 
 
-During the training the Discrimantor will receive batches of real images and batches of fake images that were generated by the Generator model. We calculate the cross entropy loss between a tensor of 1s and the images and a tensor of 0s for the fake images created by the generator. The ideal discrimantor would be able to predict a 1 for all the real images and a 0 for the images that were generated - cauing the respective losses to be zero.  We add up the loss for each to get the total loss for the discriminator. 
+During the training the Discriminator will receive batches of real images and batches of fake images that were generated by the Generator model. We calculate the cross entropy loss between a tensor of 1s and the images and a tensor of 0s for the fake images created by the generator. The ideal discriminator would be able to predict a 1 for all the real images and a 0 for the images that were generated - causing the respective losses to be zero.  We add up the loss for each to get the total loss for the discriminator. 
 
 ```Python
 def discriminator_loss(real_output, fake_output):
@@ -186,14 +205,14 @@ def discriminator_loss(real_output, fake_output):
 
 ```
 
-The Generator loss is fairly similiar. We calculate the cross entropy between the scores assigned to the fake images by the Discriminator and a tensor of 1s.  This loss measures how well we have fooled the discriminator.  If we have perfectly fooled the discriminator then it will have assigned a 1 to all the images created by the generator and our cross entropy loss will be 0. 
+The Generator loss is fairly similar. We calculate the cross entropy between the scores assigned to the fake images by the Discriminator and a tensor of 1s.  This loss measures how well we have fooled the discriminator.  If we have perfectly fooled the discriminator then it will have assigned a 1 to all the images created by the generator and our cross entropy loss will be 0. 
 
 ```Python
 def generator_loss(fake_output):
     return cross_entropy(tf.ones_like(fake_output), fake_output)
 ```
 
-We need to define two Adam optimizers for both the generator and the discriminator. I debated whethere to increase the learning rate for the discriminator so that it will be able to adjust to better images faster but ultimately did not see much of an improvment in training.
+We need to define two Adam optimizers for both the generator and the discriminator. I debated whether to increase the learning rate for the discriminator so that it will be able to adjust to better images faster but ultimately did not see much of an improvement in training.
 ```Python
 generator_optimizer = tf.keras.optimizers.Adam(2e-4,beta_1=0.5)
 discriminator_optimizer = tf.keras.optimizers.Adam(2e-4,beta_1=0.5)
@@ -201,7 +220,7 @@ discriminator_optimizer = tf.keras.optimizers.Adam(2e-4,beta_1=0.5)
 ## Training
 ### Train step
 
-The training step will be repeated Sizeof(datset)/BatchSize times per epoch. For each step we input a new batch of images, calculate generated images, and then calculate generator and discriminator loss. 
+The training step will be repeated Sizeof(dataset)/BatchSize times per epoch. For each step we input a new batch of images, calculate generated images, and then calculate generator and discriminator loss. 
 
 ```Python
 @tf.function
@@ -228,11 +247,11 @@ def train_step(images,step,writer):
       tf.summary.scalar('Disc Loss', disc_loss, step=step)
 ```
 
-The @tf.function is new too tensorflow 2.0 and causes the corresponding function to compile into a graph which will allow us to train our model on the gpu provided to us by the colab enviorment. The Gradientape is used to record all operations done in it's scope and then apply the gradients to the parameters using the optimizers we have previously defined. 
+The @tf.function is new to tensorflow 2.0 and causes the corresponding function to compile into a graph which will allow us to train our model on the gpu provided to us by the colab environment. The Gradientape is used to record all operations done in its scope and then apply the gradients to the parameters using the optimizers we have previously defined. 
 
 ## Generating Images
 
-For each epoch we woud like to generate images so that we can create a gif of the training process. We would save these images to google drive. A faster method would be to save them locally then after training save the folder to google drive but because of OOM issues expereienced with training I didn't want to take any chances. As well the function would run 20 times per run of full dataset. 
+For each epoch we would like to generate images so that we can create a gif of the training process. We would save these images to google drive. A faster method would be to save them locally then after training save the folder to google drive but because of OOM issues experienced with training I didn't want to take any chances. As well the function would run 20 times per run of full dataset. 
 
 
 ```Python
@@ -290,9 +309,9 @@ def train(dataset, epochs, run, writer):
                            epoch,
                            seed)
 ```
-Since the datset object I created earlier is an interable there should not be any memory issues during trainig because only the images that are being worked on will be loaded into memory. However, I tried to debug this function and was not able to, perhaps this is a bug of tensorflow 2.0 beta- more likely I don't understand the correct way to iterate through the datset object. 
+Since the dataset object I created earlier is an iterable there should not be any memory issues during training because only the images that are being worked on will be loaded into memory. However, I tried to debug this function and was not able to, perhaps this is a bug of tensorflow 2.0 beta- more likely I don't understand the correct way to iterate through the dataset object. 
 
-Anyways below is the hack I ended up using. I found that I could run through a batch of 10,000 images before without having any issues with colab's memory usage. So I decided that I would loop over 200,000 images in groups of 10,000 storing them in a new datset and then run through that small iterable. 
+Anyways below is the hack I ended up using. I found that I could run through a batch of 10,000 images before without having any issues with colab's memory usage. So I decided that I would loop over 200,000 images in groups of 10,000 storing them in a new dataset and then run through that small iterable. 
 
 ```Python
 
