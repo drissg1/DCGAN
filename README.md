@@ -12,26 +12,15 @@ The end goal of this project was to be able to reproduce realistic looking celeb
 I made a short video that shows the training proccess happening https://github.com/drissg1/DCGAN/blob/master/video/faces.m4v
 
 A few of the generated Images that I cherry picked for their somewhat realistic nature. As you can see they are from from perfect but for only 4 full epochs of training they at least somewhat reasonable features. Obviously symmetry seams to be of no concern for the generator, a common problem for GAN models. 
-<div class="row">
-  <div class="column">
-    <img src="https://github.com/drissg1/DCGAN/blob/master/images/example1%20(11).png"
-	  title="Celeb1"  width = "300" />
-  </div>
-  <div class="column">
-    <img src="https://github.com/drissg1/DCGAN/blob/master/images/example1%20(12).png" alt="Celeb2"
-	  title="Celeb2"  width = "300" />  
-  </div>
- </div>
- <div class="row">
-  <div class="column">
-    <img src="https://github.com/drissg1/DCGAN/blob/master/images/example1%20(14).png" alt="Celeb1"
-	  title="Celeb3"  width = "300" />
-  </div>
-  <div class="column">
-    <img src="https://github.com/drissg1/DCGAN/blob/master/images/example1%20(9).png" alt="Celeb1"
-	  title="Celeb3" width = "300" />
-  </div> 
-</div>
+
+<p float="left">
+  <img src="https://github.com/drissg1/DCGAN/blob/master/images/example1%20(11).png" width="400" />
+  <img src="https://github.com/drissg1/DCGAN/blob/master/images/example1%20(12).png" width="400" /> 
+</p>
+<p float="left">
+  <img src="https://github.com/drissg1/DCGAN/blob/master/images/example1%20(14).png" width="400" />
+  <img src="https://github.com/drissg1/DCGAN/blob/master/images/example1%20(9).png" width="400" /> 
+</p>
 
 ## Setup
 
